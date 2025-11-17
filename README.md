@@ -19,7 +19,7 @@ Add this to your package's `pubspec.yaml` file:
 dependencies:
   step_goal_widget:
     git:
-      url: https://github.com/yourusername/step_goal_widget.git
+      url: https://github.com/vigoco/widget_contar_pasos.git
 ```
 
 Or if published to pub.dev:

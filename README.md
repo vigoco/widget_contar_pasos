@@ -1,39 +1,265 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# pasos_package
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages).
+Un paquete de Flutter para rastrear los pasos diarios con visualización del progreso hacia la meta, optimizado para smartwatches Wear OS. Este paquete proporciona una solución completa para el conteo de pasos con reinicio automático diario, almacenamiento persistente y un widget de interfaz personalizable.
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages).
--->
+## Características
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+* 📱 **Conteo de pasos**: Rastreo de pasos en tiempo real usando los sensores del dispositivo a través del plugin `pedometer`.
+* 🎯 **Metas diarias**: Configura y rastrea el avance hacia una meta diaria de pasos.
+* 🔄 **Reinicio automático**: Reinicia automáticamente el conteo de pasos a medianoche para un seguimiento diario preciso.
+* 💾 **Almacenamiento persistente**: Guarda los pasos base mediante SharedPreferences para mantener precisión incluso después de cerrar la app.
+* 🎨 **Widget personalizable**: Widget listo para usar, hermoso y optimizado para Wear OS, con vistas compacta y expandida.
+* 📊 **Visualización del progreso**: Indicador circular mostrando el porcentaje alcanzado de la meta diaria.
+* 🔐 **Manejo de permisos**: Soporte integrado para permisos de reconocimiento de actividad.
 
-## Features
+## Compatibilidad con plataformas
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+* ✅ Android (incluido Wear OS)
 
-## Getting started
+## Instalación
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+Agrega esto a tu archivo `pubspec.yaml`:
 
-## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
-
-```dart
-const like = 'sample';
+```yaml
+dependencies:
+  pasos_package:
+    git:
+      url: https://github.com/vigoco/widget_contar_pasos.git
 ```
 
-## Additional information
+O si se publica en pub.dev:
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+```yaml
+dependencies:
+  pasos_package: ^0.0.1
+```
+
+Luego ejecuta:
+
+```
+flutter pub get
+```
+
+## Configuración
+
+### Android
+
+Agrega el siguiente permiso en `android/app/src/main/AndroidManifest.xml`:
+
+```xml
+<uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+```
+
+Para Android 10 (API 29) en adelante, también agrega:
+
+```xml
+<uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+```
+
+### iOS
+
+Agrega lo siguiente en `ios/Runner/Info.plist`:
+
+```xml
+<key>NSMotionUsageDescription</key>
+<string>This app needs access to motion data to count your steps.</string>
+```
+
+## Uso
+
+### Ejemplo básico
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:pasos_package/pasos_package.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Solicitar permiso de reconocimiento de actividad
+  final hasPermission = await Permission.activityRecognition.request();
+  
+  runApp(MyApp(hasPermission: hasPermission.isGranted));
+}
+
+class MyApp extends StatelessWidget {
+  final bool hasPermission;
+  
+  const MyApp({super.key, required this.hasPermission});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: StepCounterPage(hasPermission: hasPermission),
+    );
+  }
+}
+
+class StepCounterPage extends StatefulWidget {
+  final bool hasPermission;
+  
+  const StepCounterPage({super.key, required this.hasPermission});
+
+  @override
+  State<StepCounterPage> createState() => _StepCounterPageState();
+}
+
+class _StepCounterPageState extends State<StepCounterPage> {
+  late final PasoService? _pasoService;
+  late final PasoMetaViewModel? _viewModel;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.hasPermission) {
+      _pasoService = PasoService();
+      _viewModel = PasoMetaViewModel(
+        pasoService: _pasoService!,
+        metaDiaria: 10000, // Meta diaria: 10.000 pasos
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _viewModel?.dispose();
+    _pasoService?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!widget.hasPermission) {
+      return Scaffold(
+        body: Center(
+          child: Text('Se requiere permiso para contar los pasos'),
+        ),
+      );
+    }
+
+    return Scaffold(
+      body: PasoMetaWidget(
+        viewModel: _viewModel!,
+        progressColor: Colors.blue,
+        backgroundColor: Colors.black,
+      ),
+    );
+  }
+}
+```
+
+### Usar el servicio directamente
+
+Si deseas usar el servicio de conteo sin el widget:
+
+```dart
+final pasoService = PasoService();
+
+// Escuchar actualizaciones de pasos
+pasoService.stepsStream.listen((steps) {
+  print('Pasos actuales: $steps');
+});
+
+// No olvides liberar recursos
+pasoService.dispose();
+```
+
+### Personalizar el widget
+
+```dart
+PasoMetaWidget(
+  viewModel: _viewModel!,
+  progressColor: Colors.green,        // Color del anillo de progreso
+  backgroundColor: Colors.white,      // Color de fondo
+  stepTextStyle: TextStyle(           // Estilo del texto de pasos
+    fontSize: 40,
+    fontWeight: FontWeight.bold,
+    color: Colors.black,
+  ),
+  goalTextStyle: TextStyle(           // Estilo del texto de la meta
+    fontSize: 18,
+    color: Colors.grey,
+  ),
+)
+```
+
+## Referencia de API
+
+### PasoService
+
+Un servicio que provee un stream del conteo diario de pasos.
+
+**Métodos:**
+
+* `Stream<int> get stepsStream` – Stream de pasos diarios (se reinicia a medianoche)
+* `void dispose()` – Libera recursos
+
+**Características:**
+
+* Maneja automáticamente el reinicio diario
+* Guarda pasos base usando SharedPreferences
+* Calcula pasos diarios a partir del contador acumulado del dispositivo
+
+### PasoMetaViewModel
+
+Un ChangeNotifier que gestiona la meta y el progreso de pasos.
+
+**Propiedades:**
+
+* `int pasos` – Conteo actual de pasos
+* `int metaDiaria` – Meta diaria de pasos
+* `double progressPercent` – Porcentaje de progreso (0.0 a 1.0)
+* `bool isExpanded` – Si el widget está en vista expandida
+
+**Métodos:**
+
+* `void toggleExpanded()` – Alterna entre vistas compacta y expandida
+* `void setDailyGoal(int goal)` – Configura una nueva meta diaria
+* `void dispose()` – Libera recursos
+
+### PasoMetaWidget
+
+Widget que muestra el conteo de pasos y el progreso hacia la meta diaria.
+
+**Parámetros:**
+
+* `viewModel` (requerido) – Instancia de `PasoMetaViewModel`
+* `progressColor` – Color del indicador de progreso
+* `backgroundColor` – Color de fondo
+* `stepTextStyle` – Estilo del texto de pasos
+* `goalTextStyle` – Estilo del texto de la meta
+
+**Características:**
+
+* Toca para alternar entre vista compacta y expandida
+* Indicador circular de progreso
+* Optimizado para pantallas Wear OS
+
+## Cómo funciona
+
+1. **Conteo de pasos**: Usa el sensor podómetro del dispositivo mediante el plugin `pedometer`.
+2. **Cálculo diario**: Guarda un valor base y calcula los pasos diarios como la diferencia con el valor actual.
+3. **Reinicio automático**: Verifica si es un nuevo día y resetea el valor base.
+4. **Persistencia**: Guarda el valor base y la fecha de reinicio en SharedPreferences para mantener la precisión.
+
+## Permisos
+
+Este paquete requiere el permiso de reconocimiento de actividad para acceder al conteo de pasos. La app de ejemplo muestra cómo solicitarlo usando `permission_handler`.
+
+## App de ejemplo
+
+Consulta el directorio `/example` para ver un ejemplo completamente funcional, incluido el manejo de permisos.
+
+## Contribuir
+
+¡Contribuciones son bienvenidas! Puedes enviar un Pull Request cuando lo desees.
+
+## Licencia
+
+Consulta el archivo LICENSE para más detalles.
+
+## Información adicional
+
+Para más información sobre este paquete, visita el repositorio en GitHub.
+

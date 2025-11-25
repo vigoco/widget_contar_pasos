@@ -16,6 +16,21 @@ Un paquete de Flutter para rastrear los pasos diarios con visualización del pro
 
 * ✅ Android (incluido Wear OS)
 
+## Vista previa del widget
+
+<p align="center">
+  <img src="/mnt/data/97ab7b68-f589-4ce0-b1d4-00c77e9a060b.png" 
+       alt="Vista compacta del widget de pasos en Wear OS" 
+       width="250">
+</p>
+
+<p align="center">
+  <img src="/mnt/data/fc66599a-816f-43f9-915c-33dbf9363258.png" 
+       alt="Vista expandida del widget en smartphone mostrando pasos y progreso" 
+       width="250">
+</p>
+
+
 ## Instalación
 
 Agrega esto a tu archivo `pubspec.yaml`:
@@ -32,11 +47,13 @@ O si se publica en pub.dev:
 ```yaml
 dependencies:
   pasos_package: ^0.0.1
-```
+```![599eeaed-b24c-49a1-b9c8-5400238990ee](https://github.com/user-attachments/assets/d800b49b-f8ed-4c54-a2ea-50256e33db97)
+
 
 Luego ejecuta:
 
-```
+```<img width="451" height="459" alt="Captura de pantalla 2025-11-25 010036" src="https://github.com/user-attachments/assets/e9a537ed-a70b-4c4b-baf0-a5f6ef950b34" />
+
 flutter pub get
 ```
 

@@ -19,13 +19,15 @@ Un paquete de Flutter para rastrear los pasos diarios con visualización del pro
 ## Vista previa del widget
 
 <p align="center">
-  ![599eeaed-b24c-49a1-b9c8-5400238990ee](https://github.com/user-attachments/assets/3e2c89e1-a2b1-43e6-9678-ce63a0abe4a4)
+  ![599eeaed-b24c-49a1-b9c8-5400238990ee](https://github.com/user-attachments/assets/82aad4a6-5756-4da5-801b-ed3ef46e1013)
+
 </p>
 
 <p align="center">
-  <img src="/mnt/data/fc66599a-816f-43f9-915c-33dbf9363258.png" 
+  <img src="https://github.com/user-attachments/assets/cc8a6ac6-54bb-479a-a106-6a471c4b5bc1" 
        alt="Vista expandida del widget en smartphone mostrando pasos y progreso" 
-       width="250">
+       width="250">![599eeaed-b24c-49a1-b9c8-5400238990ee](https://github.com/user-attachments/assets/072f8c00-dbe9-4efa-998c-d15cc2deacfa)
+
 </p>
 
 

@@ -27,7 +27,7 @@ Un paquete de Flutter para rastrear los pasos diarios con visualización del pro
 <p align="center">
   <img src="https://github.com/user-attachments/assets/cc8a6ac6-54bb-479a-a106-6a471c4b5bc1" 
        alt="Vista expandida del widget en Wear Os mostrando diseño" 
-       width="250">![599eeaed-b24c-49a1-b9c8-5400238990ee](https://github.com/user-attachments/assets/072f8c00-dbe9-4efa-998c-d15cc2deacfa)
+       width="250">
 
 </p>
 
